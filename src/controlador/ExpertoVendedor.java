@@ -36,4 +36,15 @@ public class ExpertoVendedor {
         }
         return retorno;
     }
+    
+    public String obtenerNombreVendedor(String codigoVendedor) {
+        String retorno = "";
+        vendedores = fachadaVendedor.buscarVendedores();
+        for (DtoVendedor dtoVendedor : vendedores) {
+            if (dtoVendedor.getCondigoVendedor().equals(codigoVendedor)) {
+                retorno = dtoVendedor.getNombreVendedor();
+            }
+        }
+        return retorno;
+    }
 }

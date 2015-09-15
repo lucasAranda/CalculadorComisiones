@@ -47,4 +47,12 @@ public class DtoVendedor {
     public void setRecibos(List<DtoRecibo> recibos) {
         this.recibos = recibos;
     }
+
+    public float getComision() {
+        return comision;
+    }
+
+    public void setComision(float comision) {
+        this.comision = comision;
+    }
 }

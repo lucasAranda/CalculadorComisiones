@@ -20,7 +20,7 @@ public class ConexionSQLServer {
     public Connection conn;
     private Statement statement;
     public static ConexionSQLServer db;
-    private static final String CONEXION_TANGO = "jdbc:sqlserver://192.168.2.10:1433;databaseName=HORMICON_DOS;user=sa;password=root";
+    private static final String CONEXION_TANGO = "jdbc:sqlserver://192.168.2.205:1433;databaseName=HORMICON;user=axoft;password=Axoft";
     private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     
     private ConexionSQLServer(){

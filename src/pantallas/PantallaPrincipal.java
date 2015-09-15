@@ -6,10 +6,17 @@
 package pantallas;
 
 import comun.InicializarCombo;
+import controlador.ExpertoCalcular;
 import controlador.ExpertoRecibo;
 import controlador.ExpertoVendedor;
+import dto.DtoCheque;
+import dto.DtoFactura;
+import dto.DtoRecibo;
 import dto.DtoVendedor;
+import excepciones.ExcepcionesComunes;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 
@@ -20,6 +27,7 @@ import javax.swing.DefaultComboBoxModel;
 public class PantallaPrincipal extends javax.swing.JFrame {
 
     private ExpertoVendedor expertoVendedor;
+    private ExpertoCalcular expertoCalcular;
     private Calendar calendar;
 
     /**
@@ -28,6 +36,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     public PantallaPrincipal() {
         initComponents();
         expertoVendedor = new ExpertoVendedor();
+        expertoCalcular = new ExpertoCalcular();
         comboVendedor.setModel(cargarVendedores());
         this.calendar = Calendar.getInstance();
         crearAnioDesde(calendar.get(Calendar.YEAR));
@@ -361,7 +370,39 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         fechaHasta = comboAnioHasta.getSelectedItem().toString() + comboMesHasta.getSelectedItem().toString() + comboDiaHasta.getSelectedItem().toString();
         System.out.println(fechaDesde);
         System.out.println(fechaHasta);
-        new ExpertoRecibo().buscarRecibosVendedor(expertoVendedor.obtenerCodigoVendedor(comboVendedor.getSelectedItem().toString()), fechaDesde, fechaHasta);
+        try {
+            DtoVendedor vendedor = expertoCalcular.calcularComisionVendedor(expertoVendedor.obtenerCodigoVendedor(comboVendedor.getSelectedItem().toString()), fechaDesde, fechaHasta,
+                    Integer.valueOf(diasMenor.getText()), Integer.valueOf(diasMedio.getText()), Integer.valueOf(diasMayor.getText()), Float.valueOf(porcentaje1.getText()),
+                    Float.valueOf(porcentaje2.getText()), Float.valueOf(porcentaje3.getText()), Float.valueOf(porcentaje4.getText()));
+            
+            System.out.println("Vendedor: "+ vendedor.getNombreVendedor());
+            System.out.println("Codigo Vendedor: "+ vendedor.getCondigoVendedor());
+            System.out.println("Comision Total: "+ vendedor.getComision());
+            int i = 1;
+            for (DtoRecibo dtoRecibo : vendedor.getRecibos()) {
+                System.out.println("Recibo "+ i + ": "+dtoRecibo.getNumeroComprobante());
+                System.out.println("Fecha: "+ dtoRecibo.getFecha());
+                System.out.println("Importe recibo: "+ dtoRecibo.getImporte());
+                int j = 1;
+                for (DtoFactura dtoFactura : dtoRecibo.getFacturasRecibo()) {
+                    System.out.print("Factura "+ j +": "+ dtoFactura.getNumeroComprobante());
+                    System.out.print(". Fecha: "+ dtoFactura.getFecha());
+                    System.out.println(". Importe Factura: "+ dtoFactura.getImporte());
+                    j++;
+                }
+                j = 1;
+                for (DtoCheque dtoCheque : dtoRecibo.getChequesRecibo()) {
+                    System.out.print("Cheque: "+ j + ": "+ dtoCheque.getNumeroCheque());
+                    System.out.print(". Fecha de Cobro: "+ dtoCheque.getFechaCobroCheque());
+                    System.out.println(". Importe Cheque: "+ dtoCheque.getImporte());
+                    j++;
+                }
+                i++;
+            }
+        } catch (ExcepcionesComunes ex) {
+            System.out.println("Error con las fechas");
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_calcularActionPerformed
 

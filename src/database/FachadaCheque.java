@@ -53,6 +53,6 @@ public class FachadaCheque {
         } catch (SQLException ex) {
             Logger.getLogger(FachadaVendedor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return cheques;
     }
 }

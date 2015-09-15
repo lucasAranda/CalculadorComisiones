@@ -31,10 +31,10 @@ public class FachadaFactura {
         List<DtoFactura> facturas = new ArrayList<>();
         try {
             ResultSet rs; 
-            PreparedStatement ps = conexion.conn.prepareStatement("SELECT ID_GVA12, COD_CLIENT, COD_VENDED, ESTADO, FECHA_EMIS, IMPORTE, N_COMP, T_COMP "
+            PreparedStatement ps = conexion.conn.prepareStatement("SELECT ID_GVA12, COD_CLIENT, COD_VENDED, ESTADO, FECHA_EMIS, IMPORTE, GVA12.N_COMP, GVA12.T_COMP "
                     + "FROM GVA12 INNER JOIN GVA07 ON GVA12.N_COMP = GVA07.N_COMP "
-                    + "WHERE ESTADO != 'ANU' AND T_COMP = 'FAC' AND N_COMP_CAN = ? "
-                    + "ORDER BY FECHA_EMIS");
+                    + "WHERE ESTADO != 'ANU' AND GVA12.T_COMP = 'FAC' AND N_COMP_CAN = ? "
+                    + "ORDER BY ESTADO, FECHA_EMIS");
             ps.setString(1, numeroRecibo);
             rs = ps.executeQuery();
             while(rs.next()){
