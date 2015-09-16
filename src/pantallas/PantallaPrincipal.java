@@ -170,6 +170,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         diasMayor.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         diasMayor.setText("0");
+        diasMayor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                diasMayorKeyReleased(evt);
+            }
+        });
 
         jLabel18.setText("días   Porcentaje de Comision:");
 
@@ -399,11 +404,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 }
                 i++;
             }
+            new ResultadoCalculo(vendedor).setVisible(true);
         } catch (ExcepcionesComunes ex) {
             System.out.println("Error con las fechas");
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }//GEN-LAST:event_calcularActionPerformed
 
     private void comboMesDesdeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesDesdeActionPerformed
@@ -415,6 +421,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         crearDiaHasta(calendar.get(Calendar.DATE), comboMesDesde.getSelectedIndex());
     }//GEN-LAST:event_comboMesHastaActionPerformed
+
+    private void diasMayorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_diasMayorKeyReleased
+        // TODO add your handling code here:
+        jTextField1.setText(diasMayor.getText());
+    }//GEN-LAST:event_diasMayorKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

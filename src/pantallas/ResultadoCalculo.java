@@ -6,17 +6,28 @@
 
 package pantallas;
 
+import dto.DtoRecibo;
+import dto.DtoVendedor;
+import java.awt.Color;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author maquina0
  */
 public class ResultadoCalculo extends javax.swing.JFrame {
-
+    
+    private DtoVendedor vendedor;
     /**
      * Creates new form ResultadoCalculo
      */
-    public ResultadoCalculo() {
+    public ResultadoCalculo(DtoVendedor vendedor) {
         initComponents();
+        this.vendedor = vendedor;
+        nombreVendedor.setText(vendedor.getNombreVendedor());
+        totalComision.setText(String.valueOf(vendedor.getComision()));
+        cargarTablaRecibos();
     }
 
     /**
@@ -37,7 +48,7 @@ public class ResultadoCalculo extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaRecibos = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -47,7 +58,7 @@ public class ResultadoCalculo extends javax.swing.JFrame {
 
         nombreVendedor.setText("Vendedor");
 
-        jLabel3.setText("TOTAL COMISION CALCULADA:");
+        jLabel3.setText("TOTAL COMISION CALCULADA ($):");
 
         totalComision.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         totalComision.setText("Total");
@@ -63,6 +74,11 @@ public class ResultadoCalculo extends javax.swing.JFrame {
                 "Numero Recibo", "Fecha", "Estado", "Importe ($)"
             }
         ));
+        tablaRecibos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaRecibosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaRecibos);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -116,40 +132,17 @@ public class ResultadoCalculo extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ResultadoCalculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ResultadoCalculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ResultadoCalculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ResultadoCalculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private void tablaRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaRecibosMouseClicked
+        // TODO add your handling code here:
+        if (!(tablaRecibos.getSelectedRow() == -1)) {
+            //obtener boolean del DtoPedido seleccionado y enviarselo a la pantalla de despacho
+            new FacturasCheques(vendedor.getRecibos().get(tablaRecibos.getSelectedRow())).setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione un Recibo");
         }
-        //</editor-fold>
+    }//GEN-LAST:event_tablaRecibosMouseClicked
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ResultadoCalculo().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -161,4 +154,21 @@ public class ResultadoCalculo extends javax.swing.JFrame {
     private javax.swing.JTable tablaRecibos;
     private javax.swing.JLabel totalComision;
     // End of variables declaration//GEN-END:variables
+
+    private void cargarTablaRecibos() {
+        DefaultTableModel defaultTableModel = new DefaultTableModel();
+        defaultTableModel.addColumn("Numero Recibo");
+        defaultTableModel.addColumn("Fecha de Emision");
+        defaultTableModel.addColumn("Estado");
+        defaultTableModel.addColumn("Importe ($)");
+        for (DtoRecibo dtoRecibo : vendedor.getRecibos()) {
+            Object[] fila = new Object[4];
+            fila[0] = dtoRecibo.getNumeroComprobante();
+            fila[1] = dtoRecibo.getFecha();
+            fila[2] = dtoRecibo.getEstado();
+            fila[3] = dtoRecibo.getImporte();
+            defaultTableModel.addRow(fila);
+        }
+        tablaRecibos.setModel(defaultTableModel);
+    }
 }
