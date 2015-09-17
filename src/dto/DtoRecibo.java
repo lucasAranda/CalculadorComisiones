@@ -21,6 +21,7 @@ public class DtoRecibo {
     private String estado;
     private String fecha;
     private double importe;
+    private float comision;
     private String numeroComprobante;
     private String tipoComprobante;
     private List<DtoFactura> facturasRecibo;
@@ -109,6 +110,14 @@ public class DtoRecibo {
 
     public void setChequesRecibo(List<DtoCheque> chequesRecibo) {
         this.chequesRecibo = chequesRecibo;
+    }
+
+    public float getComision() {
+        return comision;
+    }
+
+    public void setComision(float comision) {
+        this.comision = comision;
     }
     
 }

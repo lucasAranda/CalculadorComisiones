@@ -123,11 +123,12 @@
             <Component class="javax.swing.JTable" name="tablaRecibos">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="4">
+                  <Table columnCount="5" rowCount="4">
                     <Column editable="true" title="Numero Recibo" type="java.lang.Object"/>
                     <Column editable="true" title="Fecha" type="java.lang.Object"/>
                     <Column editable="true" title="Estado" type="java.lang.Object"/>
                     <Column editable="true" title="Importe ($)" type="java.lang.Object"/>
+                    <Column editable="true" title="Comision del Recibo ($)" type="java.lang.Object"/>
                   </Table>
                 </Property>
               </Properties>

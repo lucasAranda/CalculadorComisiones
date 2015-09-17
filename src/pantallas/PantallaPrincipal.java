@@ -38,6 +38,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         expertoVendedor = new ExpertoVendedor();
         expertoCalcular = new ExpertoCalcular();
         comboVendedor.setModel(cargarVendedores());
+        //mostrarBasesDatos();
         this.calendar = Calendar.getInstance();
         crearAnioDesde(calendar.get(Calendar.YEAR));
         crearAnioHasta(calendar.get(Calendar.YEAR));
@@ -611,6 +612,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
         defaultComboBoxModel.setSelectedItem(dia);
         comboDiaHasta.setModel(defaultComboBoxModel);
+    }
+
+    private void mostrarBasesDatos() {
+        for (String string : expertoVendedor.obtenerBasesDatos()) {
+            System.out.println(string);
+        }
     }
 
 }

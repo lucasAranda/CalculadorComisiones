@@ -31,6 +31,7 @@ public class ExpertoCalcular {
     private ExpertoVendedor expertoVendedor;
     private float porcentaje;
     private float totalComisiones;
+    private float comisionRecibo;
     private float totalCheques;
     private int dias, dias1, dias2, dias3;
     private float porcentaje1, porcentaje2, porcentaje3, porcentaje4;
@@ -53,19 +54,20 @@ public class ExpertoCalcular {
         this.porcentaje2 = porcentaje2;
         this.porcentaje3 = porcentaje3;
         this.porcentaje4 = porcentaje4;
+        this.totalComisiones = 0;
         double sumaFacturas = 0;
         List<DtoFactura> facturas;
         List<DtoCheque> cheques;
         List<DtoCheque> chequesSinUsar;
         List<DtoRecibo> recibosVendedor = fachadaRecibo.buscarRecibosVendedorPorFecha(codigoVendedor, fechaDesde, fechaHasta);
-        
+
         DtoVendedor vendedor = new DtoVendedor();
         vendedor.setCondigoVendedor(codigoVendedor);
         vendedor.setNombreVendedor(expertoVendedor.obtenerNombreVendedor(codigoVendedor));
-        
-        
+
         for (DtoRecibo recibo : recibosVendedor) {
             this.totalCheques = 0;
+            this.comisionRecibo = 0;
             facturas = fachadaFactura.buscarFacturasRecibo(recibo.getNumeroComprobante());
             cheques = fachadaCheque.buscarChequesRecibo(recibo.getNumeroComprobante());
             chequesSinUsar = cheques;
@@ -78,24 +80,47 @@ public class ExpertoCalcular {
                 for (Double facturaNoUsada : facturasNoUsadas) {
                     sumaFacturas += facturaNoUsada;
                 }
+                //AGREGAR QUE PASA SI QUEDAN CHEQUES SIN USAR Y SUMARLO AL TOTAL CHEQUES
+                for (DtoCheque dtoCheque : chequesSinUsar) {
+                    dias = DiferenciaEntreFechas.calcularDiferencia(recibo.getFecha(), dtoCheque.getFechaCobroCheque());
+                        if (dias <= diasMenor) {
+                            porcentaje = porcentaje1;
+                        } else if (dias <= diasMedio) {
+                            porcentaje = porcentaje2;
+                        } else if (dias <= diasMayor) {
+                            porcentaje = porcentaje3;
+                        } else {
+                            porcentaje = porcentaje4;
+                        }
+                        this.comisionRecibo += (dtoCheque.getImporte() * porcentaje / 100);
+                        this.totalCheques += dtoCheque.getImporte();
+                }
+                //FALTA VER QUE COMO SE COBRE EL RECIBO CON RELACION A LA FACTURA
                 if (totalCheques < recibo.getImporte()) {
-                    totalComisiones += (recibo.getImporte() - totalCheques)*porcentaje1/100; 
+                    comisionRecibo += (recibo.getImporte() - totalCheques) * porcentaje1 / 100;
                 }
             } else {
-                for (DtoCheque dtoCheque : cheques) {
-                    dias = DiferenciaEntreFechas.calcularDiferencia(recibo.getFecha(), dtoCheque.getFechaCobroCheque());
-                    if (dias <= diasMenor) {
-                        porcentaje = porcentaje1;
-                    } else if (dias <= diasMedio) {
-                        porcentaje = porcentaje2;
-                    } else if (dias <= diasMayor) {
-                        porcentaje = porcentaje3;
-                    } else {
-                        porcentaje = porcentaje4;
+                if (cheques.isEmpty()) {
+                    this.comisionRecibo += recibo.getImporte()*porcentaje1/100;
+                } else {
+                    for (DtoCheque dtoCheque : cheques) {
+                        dias = DiferenciaEntreFechas.calcularDiferencia(recibo.getFecha(), dtoCheque.getFechaCobroCheque());
+                        if (dias <= diasMenor) {
+                            porcentaje = porcentaje1;
+                        } else if (dias <= diasMedio) {
+                            porcentaje = porcentaje2;
+                        } else if (dias <= diasMayor) {
+                            porcentaje = porcentaje3;
+                        } else {
+                            porcentaje = porcentaje4;
+                        }
+                        this.comisionRecibo += (dtoCheque.getImporte() * porcentaje / 100);
                     }
-                    this.totalComisiones += (dtoCheque.getImporte() * porcentaje / 100);
                 }
             }
+            System.out.println("Comision recibo: "+this.comisionRecibo);
+            recibo.setComision(comisionRecibo);
+            this.totalComisiones += this.comisionRecibo;
             vendedor.getRecibos().add(recibo);
         }
         vendedor.setComision(totalComisiones);
@@ -121,15 +146,15 @@ public class ExpertoCalcular {
                 copiaImporteACobrar = importeACobrar;
                 importeACobrar = importeACobrar - dtoCheque.getImporte();
                 if (importeACobrar < 0) {
-                    this.totalComisiones += copiaImporteACobrar*porcentaje/100;//ERROR
+                    this.comisionRecibo += copiaImporteACobrar * porcentaje / 100;//ERROR
                     DtoCheque cheque = new DtoCheque();
                     cheque.setFechaCobroCheque(dtoCheque.getFechaCobroCheque());
-                    cheque.setImporte((float) (importeACobrar*(-1.0)));
+                    cheque.setImporte((float) (importeACobrar * (-1.0)));
                     cheques.add(cheque);
                     this.totalCheques += copiaImporteACobrar;//PROBLEMA, HACER SUMATORIA DE CHEQUES USADOS
-                    
-                }else {
-                    this.totalComisiones += dtoCheque.getImporte()*porcentaje/100;
+
+                } else {
+                    this.comisionRecibo += dtoCheque.getImporte() * porcentaje / 100;
                     this.totalCheques += dtoCheque.getImporte();//PROBLEMA, HACER SUMATORIA DE CHEQUES USADOS
                 }
             } else {

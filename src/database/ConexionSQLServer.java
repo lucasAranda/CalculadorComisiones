@@ -20,6 +20,7 @@ public class ConexionSQLServer {
     public Connection conn;
     private Statement statement;
     public static ConexionSQLServer db;
+    //private static final String CONEXION_TANGO = "jdbc:sqlserver://192.168.2.10:1433;databaseName=HORMICON_DOS;user=sa;password=root";
     private static final String CONEXION_TANGO = "jdbc:sqlserver://192.168.2.205:1433;databaseName=HORMICON;user=axoft;password=Axoft";
     private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     
@@ -43,6 +44,11 @@ public class ConexionSQLServer {
     public ResultSet ejecutarConsulta(String query) throws SQLException{
         statement = db.conn.createStatement();
         ResultSet res = statement.executeQuery(query);
+        return res;
+    }
+    
+    public ResultSet obtenerBases() throws SQLException{
+        ResultSet res = db.conn.getMetaData().getCatalogs();
         return res;
     }
 }

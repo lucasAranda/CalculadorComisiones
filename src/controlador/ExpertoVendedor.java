@@ -47,4 +47,8 @@ public class ExpertoVendedor {
         }
         return retorno;
     }
+    
+    public List<String> obtenerBasesDatos(){
+        return fachadaVendedor.obtenerBasesDatos();
+    }
 }

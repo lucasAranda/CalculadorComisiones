@@ -65,13 +65,13 @@ public class ResultadoCalculo extends javax.swing.JFrame {
 
         tablaRecibos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Numero Recibo", "Fecha", "Estado", "Importe ($)"
+                "Numero Recibo", "Fecha", "Estado", "Importe ($)", "Comision del Recibo ($)"
             }
         ));
         tablaRecibos.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -161,12 +161,14 @@ public class ResultadoCalculo extends javax.swing.JFrame {
         defaultTableModel.addColumn("Fecha de Emision");
         defaultTableModel.addColumn("Estado");
         defaultTableModel.addColumn("Importe ($)");
+        defaultTableModel.addColumn("Comision del Recibo($)");
         for (DtoRecibo dtoRecibo : vendedor.getRecibos()) {
-            Object[] fila = new Object[4];
+            Object[] fila = new Object[5];
             fila[0] = dtoRecibo.getNumeroComprobante();
             fila[1] = dtoRecibo.getFecha();
             fila[2] = dtoRecibo.getEstado();
             fila[3] = dtoRecibo.getImporte();
+            fila[4] = dtoRecibo.getComision();
             defaultTableModel.addRow(fila);
         }
         tablaRecibos.setModel(defaultTableModel);
