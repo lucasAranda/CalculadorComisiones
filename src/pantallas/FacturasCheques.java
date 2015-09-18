@@ -24,6 +24,7 @@ public class FacturasCheques extends javax.swing.JFrame {
      */
     public FacturasCheques(DtoRecibo recibo) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.recibo = recibo;
         cargarFacturas(recibo.getFacturasRecibo());
         cargarCheques(recibo.getChequesRecibo());

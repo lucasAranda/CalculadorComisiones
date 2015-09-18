@@ -24,6 +24,7 @@ public class ResultadoCalculo extends javax.swing.JFrame {
      */
     public ResultadoCalculo(DtoVendedor vendedor) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.vendedor = vendedor;
         nombreVendedor.setText(vendedor.getNombreVendedor());
         totalComision.setText(String.valueOf(vendedor.getComision()));

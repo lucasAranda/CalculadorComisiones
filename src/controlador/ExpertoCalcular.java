@@ -6,10 +6,10 @@
 package controlador;
 
 import comun.DiferenciaEntreFechas;
+import comun.Redondear;
 import database.FachadaCheque;
 import database.FachadaFactura;
 import database.FachadaRecibo;
-import database.FachadaVendedor;
 import dto.DtoCheque;
 import dto.DtoFactura;
 import dto.DtoRecibo;
@@ -23,8 +23,7 @@ import java.util.List;
  * @author maquina0
  */
 public class ExpertoCalcular {
-
-    private FachadaVendedor fachadaVendedor;
+    
     private FachadaRecibo fachadaRecibo;
     private FachadaFactura fachadaFactura;
     private FachadaCheque fachadaCheque;
@@ -38,7 +37,6 @@ public class ExpertoCalcular {
     List<Double> facturasNoUsadas = new ArrayList<>();
 
     public ExpertoCalcular() {
-        this.fachadaVendedor = new FachadaVendedor();
         this.fachadaRecibo = new FachadaRecibo();
         this.fachadaFactura = new FachadaFactura();
         this.fachadaCheque = new FachadaCheque();
@@ -58,7 +56,7 @@ public class ExpertoCalcular {
         double sumaFacturas = 0;
         List<DtoFactura> facturas;
         List<DtoCheque> cheques;
-        List<DtoCheque> chequesSinUsar;
+        
         List<DtoRecibo> recibosVendedor = fachadaRecibo.buscarRecibosVendedorPorFecha(codigoVendedor, fechaDesde, fechaHasta);
 
         DtoVendedor vendedor = new DtoVendedor();
@@ -66,11 +64,22 @@ public class ExpertoCalcular {
         vendedor.setNombreVendedor(expertoVendedor.obtenerNombreVendedor(codigoVendedor));
 
         for (DtoRecibo recibo : recibosVendedor) {
+            List<DtoCheque> chequesSinUsar = new ArrayList<>();
             this.totalCheques = 0;
             this.comisionRecibo = 0;
             facturas = fachadaFactura.buscarFacturasRecibo(recibo.getNumeroComprobante());
             cheques = fachadaCheque.buscarChequesRecibo(recibo.getNumeroComprobante());
-            chequesSinUsar = cheques;
+            for (DtoCheque dtoCheque : cheques) {
+                totalCheques += dtoCheque.getImporte();
+            }
+            if (totalCheques < recibo.getImporte()) {
+                DtoCheque chequeEfectivo = new DtoCheque();
+                chequeEfectivo.setImporte((float) (recibo.getImporte()-totalCheques));
+                chequeEfectivo.setNumeroCheque(0);
+                chequeEfectivo.setFechaCobroCheque(recibo.getFecha());
+                chequesSinUsar.add(chequeEfectivo);
+            }
+            chequesSinUsar.addAll(cheques);
             recibo.setChequesRecibo(cheques);
             recibo.setFacturasRecibo(facturas);
             if (!facturas.isEmpty()) {
@@ -96,9 +105,9 @@ public class ExpertoCalcular {
                         this.totalCheques += dtoCheque.getImporte();
                 }
                 //FALTA VER QUE COMO SE COBRE EL RECIBO CON RELACION A LA FACTURA
-                if (totalCheques < recibo.getImporte()) {
+                /*if (totalCheques < recibo.getImporte()) {
                     comisionRecibo += (recibo.getImporte() - totalCheques) * porcentaje1 / 100;
-                }
+                }*/
             } else {
                 if (cheques.isEmpty()) {
                     this.comisionRecibo += recibo.getImporte()*porcentaje1/100;
@@ -119,8 +128,8 @@ public class ExpertoCalcular {
                 }
             }
             System.out.println("Comision recibo: "+this.comisionRecibo);
-            recibo.setComision(comisionRecibo);
-            this.totalComisiones += this.comisionRecibo;
+            recibo.setComision(Redondear.redondearFloat(comisionRecibo/1.21f, 2));
+            this.totalComisiones += Redondear.redondearFloat(comisionRecibo/1.21f, 2);
             vendedor.getRecibos().add(recibo);
         }
         vendedor.setComision(totalComisiones);

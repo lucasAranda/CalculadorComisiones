@@ -35,6 +35,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
      */
     public PantallaPrincipal() {
         initComponents();
+        this.setLocationRelativeTo(null);
         expertoVendedor = new ExpertoVendedor();
         expertoCalcular = new ExpertoCalcular();
         comboVendedor.setModel(cargarVendedores());
@@ -108,10 +109,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jLabel3.setText("Fecha desde:");
 
         comboDiaDesde.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboDiaDesde.setNextFocusableComponent(comboAnioDesde);
 
         jLabel4.setText("/");
 
         comboMesDesde.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboMesDesde.setNextFocusableComponent(comboDiaDesde);
         comboMesDesde.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboMesDesdeActionPerformed(evt);
@@ -125,10 +128,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jLabel6.setText("Fecha hasta:");
 
         comboDiaHasta.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboDiaHasta.setNextFocusableComponent(comboAnioHasta);
 
         jLabel7.setText("/");
 
         comboMesHasta.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboMesHasta.setNextFocusableComponent(comboDiaHasta);
         comboMesHasta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboMesHastaActionPerformed(evt);
@@ -510,7 +515,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 defaultComboBoxModel.addElement(recorrido);
             }
         }
-        defaultComboBoxModel.setSelectedItem(mes);
+        if (mes < 10) {
+            defaultComboBoxModel.setSelectedItem("0"+mes);
+        } else {
+            defaultComboBoxModel.setSelectedItem(mes);
+        }
         comboMesDesde.setModel(defaultComboBoxModel);
     }
 
@@ -523,7 +532,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 defaultComboBoxModel.addElement(recorrido);
             }
         }
-        defaultComboBoxModel.setSelectedItem(mes);
+        if (mes < 10) {
+            defaultComboBoxModel.setSelectedItem("0"+mes);
+        } else {
+            defaultComboBoxModel.setSelectedItem(mes);
+        }
         comboMesHasta.setModel(defaultComboBoxModel);
     }
 
