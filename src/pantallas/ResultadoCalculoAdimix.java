@@ -8,7 +8,6 @@ package pantallas;
 
 import dto.DtoRecibo;
 import dto.DtoVendedor;
-import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -16,13 +15,13 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author maquina0
  */
-public class ResultadoCalculo extends javax.swing.JFrame {
+public class ResultadoCalculoAdimix extends javax.swing.JFrame {
     
     private DtoVendedor vendedor;
     /**
      * Creates new form ResultadoCalculo
      */
-    public ResultadoCalculo(DtoVendedor vendedor) {
+    public ResultadoCalculoAdimix(DtoVendedor vendedor) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.vendedor = vendedor;
@@ -75,11 +74,6 @@ public class ResultadoCalculo extends javax.swing.JFrame {
                 "Numero Recibo", "Cliente", "Fecha", "Estado", "Importe ($)", "Comision del Recibo ($)"
             }
         ));
-        tablaRecibos.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablaRecibosMouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(tablaRecibos);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -132,16 +126,6 @@ public class ResultadoCalculo extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void tablaRecibosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaRecibosMouseClicked
-        // TODO add your handling code here:
-        if (!(tablaRecibos.getSelectedRow() == -1)) {
-            //obtener boolean del DtoPedido seleccionado y enviarselo a la pantalla de despacho
-            new FacturasCheques(vendedor.getRecibos().get(tablaRecibos.getSelectedRow())).setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null, "Seleccione un Recibo");
-        }
-    }//GEN-LAST:event_tablaRecibosMouseClicked
 
     
 

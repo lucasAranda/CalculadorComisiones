@@ -175,4 +175,30 @@ public class ExpertoCalcular {
         }
         return cheques;
     }
+    
+    public DtoVendedor calcularComisionVendedorAdimix(String codigoVendedor, String fechaDesde, String fechaHasta, float porcentaje1) throws ExcepcionesComunes {
+        
+        this.porcentaje1 = porcentaje1;
+        this.totalComisiones = 0;
+        double sumaFacturas = 0;
+        
+        List<DtoRecibo> recibosVendedor = fachadaRecibo.buscarRecibosVendedorPorFecha(codigoVendedor, fechaDesde, fechaHasta);
+
+        DtoVendedor vendedor = new DtoVendedor();
+        vendedor.setCondigoVendedor(codigoVendedor);
+        vendedor.setNombreVendedor(expertoVendedor.obtenerNombreVendedor(codigoVendedor));
+
+        for (DtoRecibo recibo : recibosVendedor) {
+            
+            this.comisionRecibo = 0;    
+            
+            this.comisionRecibo = (float) (recibo.getImporte()*porcentaje1/100);
+            System.out.println("Comision recibo: "+this.comisionRecibo);
+            recibo.setComision(Redondear.redondearFloat(comisionRecibo, 2));
+            this.totalComisiones += Redondear.redondearFloat(comisionRecibo, 2);
+            vendedor.getRecibos().add(recibo);
+        }
+        vendedor.setComision(Redondear.redondearFloat(totalComisiones, 2));
+        return vendedor;
+    }
 }

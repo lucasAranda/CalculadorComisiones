@@ -31,9 +31,12 @@ public class FachadaRecibo {
         List<DtoRecibo> recibos = new ArrayList<>();
         try {
             ResultSet rs; 
-            PreparedStatement ps = conexion.conn.prepareStatement("SELECT ID_GVA12, COD_CLIENT, COD_VENDED, ESTADO, FECHA_EMIS, IMPORTE, N_COMP, T_COMP "
+            /*PreparedStatement ps = conexion.conn.prepareStatement("SELECT ID_GVA12, COD_CLIENT, COD_VENDED, ESTADO, FECHA_EMIS, IMPORTE, N_COMP, T_COMP "
                     + "FROM GVA12 "
-                    + "WHERE COD_VENDED = ? AND FECHA_EMIS BETWEEN ? AND ? AND T_COMP = 'REC'");
+                    + "WHERE COD_VENDED = ? AND FECHA_EMIS BETWEEN ? AND ? AND T_COMP = 'REC'");*/
+            PreparedStatement ps = conexion.conn.prepareStatement("SELECT ID_GVA12, GVA12.COD_CLIENT, GVA14.RAZON_SOCI,  GVA12.COD_VENDED, ESTADO, FECHA_EMIS, IMPORTE, N_COMP, T_COMP "
+                    + "FROM GVA12 INNER JOIN GVA14 ON GVA12.COD_CLIENT = GVA14.COD_CLIENT "
+                    + "WHERE GVA12.COD_VENDED = ? AND FECHA_EMIS BETWEEN ? AND ? AND T_COMP = 'REC'");
             ps.setString(1, codigoVendedor);
             ps.setString(2, fechaDesde);
             ps.setString(3, fechaHasta);
@@ -42,12 +45,13 @@ public class FachadaRecibo {
                 DtoRecibo recibo = new DtoRecibo();
                 recibo.setIdComprobante(rs.getLong(1));
                 recibo.setCodigoCliente(rs.getString(2));
-                recibo.setCodigoVendedor(rs.getString(3));
-                recibo.setEstado(rs.getString(4));
-                recibo.setFecha(rs.getString(5));
-                recibo.setImporte(rs.getFloat(6));
-                recibo.setNumeroComprobante(rs.getString(7));
-                recibo.setTipoComprobante(rs.getString(8));
+                recibo.setNombreCliente(rs.getString(3));
+                recibo.setCodigoVendedor(rs.getString(4));
+                recibo.setEstado(rs.getString(5));
+                recibo.setFecha(rs.getString(6));
+                recibo.setImporte(rs.getFloat(7));
+                recibo.setNumeroComprobante(rs.getString(8));
+                recibo.setTipoComprobante(rs.getString(9));
                 recibos.add(recibo);
             }
             

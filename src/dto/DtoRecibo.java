@@ -17,6 +17,7 @@ public class DtoRecibo {
     
     private long idComprobante;
     private String codigoCliente;
+    private String nombreCliente;
     private String codigoVendedor;
     private String estado;
     private String fecha;
@@ -118,6 +119,14 @@ public class DtoRecibo {
 
     public void setComision(float comision) {
         this.comision = comision;
+    }
+
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
     }
     
 }

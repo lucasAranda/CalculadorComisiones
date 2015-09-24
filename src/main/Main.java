@@ -7,6 +7,7 @@
 package main;
 
 import pantallas.PantallaPrincipal;
+import pantallas.PantallaPrincipalAdimix;
 
 /**
  *
@@ -19,7 +20,7 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        new PantallaPrincipal().setVisible(true);
+        new PantallaPrincipalAdimix().setVisible(true);
         System.out.println("Hola");
     }
     
